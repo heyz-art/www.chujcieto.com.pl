@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRONA I CHUJ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Zmienne CSS */
+        :root {
+            --primary-color: #0898eb;
+            --secondary-color: #e74c3c;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --accent-color: #f39c12;
+        }
+
+        /* Animacje */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes glowing {
+            0% { box-shadow: 0 0 5px var(--primary-color); }
+            50% { box-shadow: 0 0 20px var(--primary-color); }
+            100% { box-shadow: 0 0 5px var(--primary-color); }
+        }
+
+        @keyframes zoomIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Podstawowe style */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #2903ff;
+            color: var(--light-color);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 1s ease 2s forwards;
+        }
+
+        .loader::after {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border: 5px solid #fff;
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: rotate 1s linear infinite;
+        }
+
+        /* Nawigacja */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            animation: zoomIn 0.5s ease-out;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--light-color);
+            text-decoration: none;
+            font-weight: bold;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero sekcja */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #000, transparent);
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            animation: zoomIn 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Zegar */
+        .clock {
+            font-size: 2rem;
+            font-weight: bold;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: var(--light-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Karty */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 50px;
+            animation: zoomIn 1s ease-out;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:hover {
+            transform: rotateY(10deg) rotateX(10deg);
+            animation: glowing 2s infinite;
+        }
+
+        /* Animacje liczników */
+        .counter {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        /* Przycisk 3D */
+        .btn-3d {
+            position: relative;
+            padding: 15px 30px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .btn-3d::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: #2b05d3;
+            transform: rotateX(-90deg);
+            transform-origin: top;
+        }
+
+        .btn-3d:hover {
+            transform: translateY(5px) rotateX(25deg);
+        }
+
+        /* Galeria */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 50px;
+            animation: zoomIn 1s ease-out;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        /* Animowany footer */
+        .footer {
+            background: var(--dark-color);
+            padding: 50px 0;
+            position: relative;
+            overflow: hidden;
+            animation: zoomIn 1s ease-out;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(46,204,113,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .footer-content {
+            text-align: center;
+            color: var(--light-color);
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader"></div>
+
+    <!-- Nawigacja -->
+    <nav class="nav">
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">O nas</a>
+            <a href="#services">Usługi</a>
+            <a href="#gallery">Galeria</a>
+            <a href="#contact">Kontakt</a>
+            <a href="https://www.youtube.com/@Mr_Fucke" target="_blank">Youtube</a>
+            <a href="https://www.instagram.com/majkaa.777/" target="_blank">Instagram</a>
+            <a href="https://tipply.pl/@heyz" target="_blank">Daj donejcika ;*</a>
+        </div>
+    </nav>
+
+    <!-- Hero sekcja -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Witaj w twojej matce :)</h1>
+            <button class="btn-3d" id="redirectButton">Ogladnij filmik</button>
+            <script>
+                // Przekierowanie po kliknięciu przycisku
+                document.getElementById("redirectButton").addEventListener("click", () => {
+                    window.location.href = "https://pl.pornhub.com/view_video.php?viewkey=ph615445f7c491f";
+                });
+            </script>
+            
+
+        </div>
+    </section>
+
+    <!-- Zegar -->
+    <div class="clock" id="clock"></div>
+
+    <!-- Karty -->
+    <section class="cards-container" id="services">
+        <div class="card">
+            <h2>Zasada 1</h2>
+            <p>Jebac policje.</p>
+            <i class="fas fa-keyboard fa-3x"></i>
+        </div>
+        <div class="card">
+            <h2>Zasada 2</h2>
+            <p>Jebac kurwy.</p>
+            <i class="fas fa-globe fa-3x"></i>
+        </div>
+        <div class="card">
+            <h2>Zasada 3</h2>
+            <p>Jebac cweli.</p>
+            <i class="fas fa-brain fa-3x"></i>
+        </div>
+    </section>
+
+    <!-- Liczniki -->
+    <section id="counter">
+        <div class="counter" id="counter">0</div>
+    </section>
+
+    <!-- Galeria -->
+    <section class="gallery" id="gallery">
+        <div class="gallery-item">
+            <img src="https://i.ytimg.com/vi/12erC8u5XX0/hqdefault.jpg?sqp=-oaymwEmCOADEOgC8quKqQMa8AEB-AHUAYACoAGKAgwIABABGGUgSyhGMA8=&rs=AOn4CLCUCLO-GP5dx2Ft-8B51Y3UZ4quqw" alt="Gallery 1">
+        </div>
+        <div class="gallery-item">
+            <img src="https://m.natemat.pl/99a2b568f4a9499bbc55c44ee65b150c,0,0,0,0.jpg" alt="Gallery 2">
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3>Skontaktuj się z nami</h3>
+            <p>Email: hbomaksymilian@gmail.com</p>
+            <p>Tel: +48 507 229 585</p>
+            <p><a href="https://www.youtube.com/@Mr_Fucke" target="_blank">Youtube</a></p>
+            <p><a href="https://www.instagram.com/majkaa.777/" target="_blank">Instagram</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.loader').style.display = 'none';
+            }, 3000);
+        });
+
+        // Parallax effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero');
+            parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+        });
+
+        // Licznik
+        let counter = document.getElementById('counter');
+        let count = 0;
+        setInterval(() => {
+            if (count < 100000) {
+                count++;
+                counter.innerText = count;
+            }
+        }, 100);
+
+        
+
+        setInterval(updateClock, 1000);
+        updateClock(); // Inicjalizacja zegara od razu po załadowaniu
+    </script>
+    
+</body>
+</html>
